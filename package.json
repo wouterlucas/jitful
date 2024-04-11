@@ -1,0 +1,20 @@
+{
+  "name": "jitful",
+  "version": "0.0.1",
+  "description": "Jitful experiments in JavaScript",
+  "main": "src/index.ts",
+  "scripts": {
+    "setup" : "cp node_modules/benchmark/benchmark.js public/benchmark.js && cp node_modules/lodash/lodash.js public/lodash.js",
+    "start": "npm run dev",
+    "dev": "vite --open"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "benchmark": "^2.1.4",
+    "memize": "^2.1.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.8"
+  }
+}
