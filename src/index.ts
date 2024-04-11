@@ -1,8 +1,14 @@
 import { getMemoedTimingFunction } from './getTimingMemo';
 import { getTimingFunction } from './getTimingFn';
 import { getTimingJitted } from './getTimingJitted';
+import { getTimingJittedRegex } from './getTimingJittedRegEx';
 
 import { setup } from './setup';
+
+// get amount=1000 from query params
+const urlParams = new URLSearchParams(window.location.search);
+const amount = urlParams.get('amount');
+const data = setup(amount ? parseInt(amount) : 1000);
 
 const results = document.getElementById('results');
 if (results) {
@@ -12,21 +18,24 @@ if (results) {
     results.style.color = 'black';
 }
 
-const log = (msg: string) => {
-    console.log(msg);
-    results?.appendChild(document.createTextNode(msg));
-    results?.appendChild(document.createElement('br'));
-}
+const log = (msg: string, replace?: boolean) => {
+    if (msg !== ' ')
+        console.log(msg);
 
-const start = () => {
-    log('Starting benchmark...');
-    log(' ');
+    if (!results) {
+        return;
+    }
+
+    if (replace) {
+        results.innerHTML = '';
+    }
+
+    results.appendChild(document.createTextNode(msg));
+    results.appendChild(document.createElement('br'));
 }
 
 // @ts-ignore
 const suite = new Benchmark.Suite('jitful tests')
-
-const data = setup();
 
 suite.add('getMemoedTimingFunction', () => {
     for (let i = 0; i < data.length; i++) {
@@ -35,6 +44,7 @@ suite.add('getMemoedTimingFunction', () => {
 
     return true;
 });
+
 
 suite.add('getTimingFunction', () => {
     for (let i = 0; i < data.length; i++) {
@@ -52,7 +62,16 @@ suite.add('getTimingJitted', () => {
     return true;
 });
 
-suite.on('start', start);
+
+suite.add('getTimingJittedRegex', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingJittedRegex(data[i]);
+    }
+
+    return true;
+});
+
+
 suite.on('complete', () => {
     log(' ');
     log('Benchmark complete.')
@@ -65,6 +84,12 @@ suite.on('cycle', (event) => {
     log(benchmark.toString());
 });
 
+log('Waiting 10 seconds before starting benchmark...');
+
 setTimeout(() => {
-    suite.run();
-}, 5000);
+    log('Starting benchmark...', true);
+    log(' ');
+    setTimeout(() => {
+        suite.run();
+    }, 10);
+}, 1000);

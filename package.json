@@ -7,7 +7,7 @@
     "setup" : "cp node_modules/benchmark/benchmark.js public/benchmark.js && cp node_modules/lodash/lodash.js public/lodash.js",
     "build" : "vite build",
     "start": "npm run dev",
-    "dev": "vite --open"
+    "dev": "vite --host --open"
   },
   "author": "",
   "license": "ISC",

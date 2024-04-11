@@ -27,34 +27,26 @@ const defaultTiming = (t) => {
 };
 
 const parseCubicBezier = (str: string) => {
-    const s = 'cubic-bezier('
-    const parts = str
-    .substr(s.length, str.length - s.length - 1)
-    .split(',');
-    if (parts.length !== 4) {
-        console.warn('Unknown timing function: ' + str);
-        // Fallback: use linear.
-        return function (time) {
-            return time;
-        };
-    }
-    const a = parseFloat(parts[0] || '0.42');
-    const b = parseFloat(parts[1] || '0');
-    const c = parseFloat(parts[2] || '1');
-    const d = parseFloat(parts[3] || '1');
+    //cubic-bezier(0.84, 0.52, 0.56, 0.6)
+    const regex = /cubic-bezier\((?:\s*(\d+\.?\d*)\s*,){3}\s*(\d+\.?\d*)\s*\)/;
+    const match = str.match(regex);
 
-    if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
-        console.warn(' Unknown timing function: ' + str);
-        // Fallback: use linear.
-        return function (time) {
-            return time;
-        };
+    if (match) {
+        const [, num1, num2, num3, num4] = match.slice(1);
+        const a = parseFloat(num1 || '0.42');
+        const b = parseFloat(num2 || '0');
+        const c = parseFloat(num3 || '1');
+        const d = parseFloat(num4 || '1');
+
+        return getTimingBezier(a, b, c, d);
     }
 
-    return getTimingBezier(a, b, c, d);
+    // parse failed, return linear
+    console.warn('Unknown timing function: ' + str);
+    return (t) => { return t; };
 }
 
-export const getTimingJitted = (str: string): ((time: number) => number | undefined) => {
+export const getTimingJittedRegex = (str: string): ((time: number) => number | undefined) => {
     if (!str) {
         return (t) => { return t };
     }

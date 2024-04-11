@@ -24,10 +24,10 @@ const timingOptions = [
     'cubic-bezier(0.84, 0.52, 0.56, 0.6)'
 ];
 
-export const setup = () => {
+export const setup = (amount: number = 1000) => {
     let data: string[] = [];
 
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < amount; i++) {
         const timingIndex = i % timingOptions.length;
         const timingOption = timingOptions[timingIndex];
         data.push(timingOption);
