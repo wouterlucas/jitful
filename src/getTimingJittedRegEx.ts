@@ -38,7 +38,10 @@ const parseCubicBezier = (str: string) => {
         const c = parseFloat(num3 || '1');
         const d = parseFloat(num4 || '1');
 
-        return getTimingBezier(a, b, c, d);
+        const timing = getTimingBezier(a, b, c, d);
+        timingMapping[str] = timing;
+
+        return timing;
     }
 
     // parse failed, return linear
@@ -47,13 +50,17 @@ const parseCubicBezier = (str: string) => {
 }
 
 export const getTimingJittedRegex = (str: string): ((time: number) => number | undefined) => {
-    if (!str) {
+    if (str === '') {
         return (t) => { return t };
+    }
+
+    if (timingMapping[str]) {
+        return timingMapping[str];
     }
 
     if (str.startsWith('cubic-bezier')) {
         return parseCubicBezier(str);
     }
 
-    return timingMapping[str] || defaultTiming;
+    return defaultTiming;
 };
