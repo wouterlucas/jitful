@@ -54,8 +54,8 @@ export const getTimingJittedRegex = (str: string): ((time: number) => number | u
         return (t) => { return t };
     }
 
-    if (timingMapping[str]) {
-        return timingMapping[str];
+    if (timingMapping[str] !== undefined) {
+        return timingMapping[str] || defaultTiming;
     }
 
     if (str.startsWith('cubic-bezier')) {

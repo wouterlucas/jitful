@@ -37,7 +37,16 @@ const log = (msg: string, replace?: boolean) => {
 // @ts-ignore
 const suite = new Benchmark.Suite('jitful tests')
 
-suite.add('getMemoedTimingFunction', () => {
+suite.add('original', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingFunction(data[i]);
+    }
+
+    return true;
+});
+
+
+suite.add('memoized', () => {
     for (let i = 0; i < data.length; i++) {
         const tm = getMemoedTimingFunction(data[i]);
     }
@@ -46,15 +55,7 @@ suite.add('getMemoedTimingFunction', () => {
 });
 
 
-suite.add('getTimingFunction', () => {
-    for (let i = 0; i < data.length; i++) {
-        const tm = getTimingFunction(data[i]);
-    }
-
-    return true;
-});
-
-suite.add('getTimingJitted', () => {
+suite.add('optimized non-regex', () => {
     for (let i = 0; i < data.length; i++) {
         const tm = getTimingJitted(data[i]);
     }
@@ -63,7 +64,7 @@ suite.add('getTimingJitted', () => {
 });
 
 
-suite.add('getTimingJittedRegex', () => {
+suite.add('optimized', () => {
     for (let i = 0; i < data.length; i++) {
         const tm = getTimingJittedRegex(data[i]);
     }
@@ -84,7 +85,7 @@ suite.on('cycle', (event) => {
     log(benchmark.toString());
 });
 
-log('Waiting 10 seconds before starting benchmark...');
+log('Starting benchmark...');
 
 setTimeout(() => {
     log('Starting benchmark...', true);
