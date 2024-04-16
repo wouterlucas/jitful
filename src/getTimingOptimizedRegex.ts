@@ -49,7 +49,7 @@ const parseCubicBezier = (str: string) => {
     return (t) => { return t; };
 }
 
-export const getTimingJittedRegex = (str: string): ((time: number) => number | undefined) => {
+export const getTimingOptimizedRegex = (str: string): ((time: number) => number | undefined) => {
     if (str === '') {
         return (t) => { return t };
     }

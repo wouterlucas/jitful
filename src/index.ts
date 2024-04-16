@@ -1,7 +1,11 @@
 import { getMemoedTimingFunction } from './getTimingMemo';
 import { getTimingFunction } from './getTimingFn';
-import { getTimingJitted } from './getTimingJitted';
-import { getTimingJittedRegex } from './getTimingJittedRegEx';
+import { getTimingOptimized } from './getTimingOptimized';
+import { getTimingOptimizedRegex } from './getTimingOptimizedRegex';
+import { getTimingOptimizedRegexLazy } from './getTimingOptimizedRegExLazy';
+import { getTimingHashmap } from './getTimingHashmap';
+import { getTimingHashmapLazy } from './getTimingHashmapLazy';
+import { getTimingFunctionCached } from './getTimingFnCached';
 
 import { setup } from './setup';
 
@@ -45,6 +49,14 @@ suite.add('original', () => {
     return true;
 });
 
+suite.add('original cached', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingFunctionCached(data[i]);
+    }
+
+    return true;
+});
+
 
 suite.add('memoized', () => {
     for (let i = 0; i < data.length; i++) {
@@ -55,23 +67,47 @@ suite.add('memoized', () => {
 });
 
 
-suite.add('optimized non-regex', () => {
-    for (let i = 0; i < data.length; i++) {
-        const tm = getTimingJitted(data[i]);
-    }
+// Disabling because we really dont need this variant
+// suite.add('optimized non-regex', () => {
+//     for (let i = 0; i < data.length; i++) {
+//         const tm = getTimingOptimized(data[i]);
+//     }
 
-    return true;
-});
+//     return true;
+// });
 
 
 suite.add('optimized', () => {
     for (let i = 0; i < data.length; i++) {
-        const tm = getTimingJittedRegex(data[i]);
+        const tm = getTimingOptimizedRegex(data[i]);
     }
 
     return true;
 });
 
+suite.add('optimized lazy', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingOptimizedRegexLazy(data[i]);
+    }
+
+    return true;
+});
+
+suite.add('hashmap', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingHashmap(data[i]);
+    }
+
+    return true;
+});
+
+suite.add('hashmap lazy', () => {
+    for (let i = 0; i < data.length; i++) {
+        const tm = getTimingHashmapLazy(data[i]);
+    }
+
+    return true;
+});
 
 suite.on('complete', () => {
     log(' ');
@@ -85,7 +121,7 @@ suite.on('cycle', (event) => {
     log(benchmark.toString());
 });
 
-log('Starting benchmark...');
+log('Ready!');
 
 setTimeout(() => {
     log('Starting benchmark...', true);
